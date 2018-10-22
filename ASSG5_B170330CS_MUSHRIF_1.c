@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
-
+#include<math.h>
+//new commit
 int n,k=0;
 void push(int a[],int p)
 {
