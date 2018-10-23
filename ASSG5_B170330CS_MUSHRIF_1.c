@@ -1,94 +1,94 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<math.h>
-//new commit
-int n,k=0;
-void push(int a[],int p)
+
+int global_size=0;
+void push(int a[],int ele)
 {
-	if(k==0)
+	if(global_size == 0)
 	{
-		a[k]=p;
+		a[global_size]=ele;
 	}
 	else
 	{
-		for(int i=0;i<k;++i)
+		for(int i=global_size-1;i>=0;--i)
 		{
 			a[i+1]=a[i];
 		}
-		a[0]=p;
-	}
-	
+		a[0]=ele;
+	} 
 } 
 void pop(int a[])
 {
 	printf("\nDeleted element is: %d",a[0]);
-	for(int i=1;i<k;++i)
+	for(int i=1;i<global_size;++i)
 	{
 		a[i-1]=a[i];
 	}
 }
 void print(int a[])
 {
-	if(k == 0)
-	{	
-		printf("%d\n",a[0]);
-	}	
-	else
+	for(int i=0;i<global_size;++i)
 	{
-		for(int i=k-1;i>=0;--i)
-		{
-			printf("%d ",a[i]);
-		}
-	}
-	printf("\n");
+		printf(" %d ",a[i]);
+	}	
 }
 void main()
 {
-	int choice,ele;
+	int choice,ele,size;
+	int *a;
 	
 	printf("\nEnter the size of the array: ");
-	scanf("%d",&n);
-	int *a;
-	a=(int*)malloc(sizeof(int) *n);
+	scanf("%d",&size);
+	
+	a=(int*)malloc(sizeof(int) * size);
 	do
 	{
 		printf("\n1\t-PUSH");
 		printf("\n2\t-POP");
 		printf("\n3\t-PRINT");
+		printf("\n4\t-EXIT");
 		printf("\n\nEnter the option :");
 		scanf("%d",&choice);
 		if(choice == 1)
 		{
 			printf("\nEnter the element to be inserted: ");
 			scanf("%d",&ele);
-			if(k<n)
-			{	push(a,ele);
-				k++;
+			if(global_size < size)
+			{	
+				push(a,ele);
+				global_size++;
 			}
 			else
-				printf("\nOverflow");
+				printf("\nOVERFLOW\n");
 		}
 		else if(choice == 2)
 		{
-			if(k < 0)
+			if(global_size ==  0)
 			{
-				printf("\nEmpty List");
+				printf("\nUNDERFLOW\n");
 			}
 			else
 			{
-				pop(a);
-				k--;
+				if(global_size == 1)
+				{
+					printf("\nDeleted element is: %d",a[global_size-1]);
+					global_size--;
+				}
+				else
+				{
+					pop(a);
+					global_size--;
+				}
 			}
-			
 		}
 		else if(choice == 3)
 		{
-				if(k<=-1)
-				{
-					printf("\nEmpty List");
-				}
-				else
-					print(a);
+			if(global_size == 0)
+			{
+				printf("\nEmpty List\n");
+			}
+			else
+				print(a);
 		}
 		else
 		{
