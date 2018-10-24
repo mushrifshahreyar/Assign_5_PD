@@ -1,88 +1,130 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-int parent(int i)
-{
-	return(i/2);
-}
 int left(int i)
 {
-	return(2*i);
+	return (2*i);
 }
 int right(int i)
 {
-	return((2*i)+1);
+	return ((2*i)+1);
 }
-void max_heapify(int a[], int i,int n)
+
+
+struct LinkedList{
+	int data;
+	struct LinkedList* next;
+	
+};
+typedef struct LinkedList* node;
+node head;
+
+node createNode(int data)
 {
-	int largest,swap;
-	int heapsize=n;
-	int l=left(i);
-	int r=right(i);
-	if(l<=heapsize && a[l]>a[i])
-	{
-		largest=l;
-	}
-	else
-		largest =i;
-	
-	if(r<=heapsize && a[r]>a[i])
-	{
-		largest=r;
-	}
-	else
-		largest=i;
-	
-	if(largest != i)
-	{
-		swap=a[largest];
-		a[largest]=a[i];
-		a[i]=swap;
-		max_heapify(a,largest,n);
-	}
+	node temp = (node) malloc(sizeof(struct LinkedList));
+	temp->data=data;
+	temp->next=NULL;
+	return temp;
 }
-void build_max_heap(int a[],int n)
+void addNode(int data)
 {
-	int heapsize=n; 
-	for(int i=n/2;i>=1;--i)
+	node temp = createNode(data);
+	temp->next = head;
+	head = temp;
+}
+
+
+node position(int index)
+{
+	node cursor = head;
+	for(int i =0; i< index;i++)
 	{
-		max_heapify(a,i,n);
+		cursor = cursor->next;
+	}
+	return cursor;
+}
+
+void swap(int a, int b)
+{
+	int temp = position(b)->data;
+	position(b)->data= position(a)->data;
+	position(a)->data= temp;
+}
+void max_heapify(int i, int heapsize)
+{
+	int l = left(i);
+	int r = right(i);
+	int largest=i;
+	if(l<=heapsize)
+	{
+
+		if(position(l-1)->data>position(i-1)->data)
+			largest = l;
+		else
+			largest = i;
+	}
+	if(r<=heapsize)
+	{
+		if(position(r-1)->data>position(largest-1)->data)
+			largest = r;
+	}
+
+	if(largest!=i)
+	{
+
+		swap(i-1,largest-1);
+
+
+			max_heapify(largest,heapsize);
 	}
 }
 
-void heapsort(int a[],int n)
+void build_max_heap(int length)
 {
-	int heapsize=n;
-	int swap;
-	build_max_heap(a,n);
-	for(int i=n;i>=1;--i)
+	for(int i = length;i>0;i--)
 	{
-		swap=a[1];
-		a[1]=a[i];
-		a[i]=swap;
-	
+		max_heapify(i,length);
+	}
+}
+
+void heapSort(int length)
+{
+	int heapsize = length;
+	build_max_heap(length);
+	for(int i = length; i>1; i--)
+	{
+
+		swap(0,i-1);
 		heapsize--;
-		max_heapify(a,1,heapsize);
+		max_heapify(1,heapsize);
 	}
 }
-void main()
+void print(node head)
 {
-	int n;
-	int* a;
-	printf("\nEnter n:");
-	scanf("%d",&n);
-	a=(int*)malloc(sizeof(int)*n);
-	printf("\nEnter the array:\n");
-	for(int i=1;i<=n;++i)
+	node array=head;
+	while(array!=NULL)
 	{
-		scanf("%d",&a[i]);
-	}
-	heapsort(a,n);
-	
-	printf("\nNew array is:\n");
-	for(int i=1;i<=n;++i)
-	{
-		printf(" %d\t",a[i]);
+		printf("%d ",array->data);
+		array=array->next;
 	}
 }
+int main(int argc,char *argv[])
+{
+	FILE *fp;
+	int temp;
+	int length=0;
+	fp = fopen(argv[1],"r");
+	while(!feof(fp))
+	{
+		fscanf(fp,"%d ",&temp);
+		addNode(temp);
+		length++;
+	}
+
+	heapSort(length);
+	node array = head;
+	print(head);	
+
+}
+
 
